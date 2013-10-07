@@ -1,6 +1,13 @@
 # Introduction
 
-This a fork of [Go-SDL2](http://github.com/scottferg/Go-SDL2) which supports SDL version 2.0 in a slightly different way from the version of which this is a fork. That version, in turn, forked [Go-SDL](http://github.com/Banthar/Go-SDL2) to add SDL version 2.0 support.
+This a fork of [Go-SDL2](http://github.com/scottferg/Go-SDL2) which
+supports SDL version 2.0 in a slightly different way from the version
+of which this is a fork. That version, in turn, forked
+[Go-SDL](http://github.com/Banthar/Go-SDL2) to add SDL version 2.0
+support. 
+
+The SDL2 support is still very much work in progress! It is, in fact,
+completely broken right now.
 
 Differences from scottfergs library are:
 
