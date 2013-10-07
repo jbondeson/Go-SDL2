@@ -54,6 +54,10 @@ func CreateWindow(title string, x, y int, w, h int, flags uint32) *Window {
 	return wrapWindow(window)
 }
 
+func GetCurrentVideoDriver() string {
+	return C.GoString(C.SDL_GetCurrentVideoDriver())
+}
+
 // Swaps OpenGL framebuffers/Update Display.
 func (w *Window) GL_SwapWindow() {
 	C.SDL_GL_SwapWindow(w.cWindow)
@@ -66,6 +70,15 @@ func (w *Window) GL_CreateContext() {
 func GL_SetAttribute(attr int, value int) int {
 	status := int(C.SDL_GL_SetAttribute(C.SDL_GLattr(attr), C.int(value)))
 	return status
+}
+
+func GL_GetAttribute(attr int) (int, error) {
+	var value C.int = 0
+	ret := C.SDL_GL_GetAttribute(C.SDL_GLattr(attr), &value)
+	if ret == 0 {
+		return int(value), NewSDLError()
+	}
+	return int(value), nil
 }
 
 func NumDisplayModes(index int) int {
@@ -152,3 +165,5 @@ func MapRGBA(format *PixelFormat, r, g, b, a uint8) uint32 {
 func GetRGBA(color uint32, format *PixelFormat, r, g, b, a *uint8) {
 	C.SDL_GetRGBA(C.Uint32(color), (*C.SDL_PixelFormat)(cast(format)), (*C.Uint8)(r), (*C.Uint8)(g), (*C.Uint8)(b), (*C.Uint8)(a))
 }
+
+

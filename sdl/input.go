@@ -33,25 +33,19 @@ import "unsafe"
 // Keyboard
 // ======
 
-// Modifier
-type Mod C.int
-
-// Key
-type Key C.int
-
 // Gets the state of modifier keys
-func GetModState() Mod {
-	state := Mod(C.SDL_GetModState())
+func GetModState() int32 {
+	state := int32(C.SDL_GetModState())
 	return state
 }
 
 // Sets the state of modifier keys
-func SetModState(modstate Mod) {
+func SetModState(modstate int32) {
 	C.SDL_SetModState(C.SDL_Keymod(modstate))
 }
 
 // Gets the name of an SDL virtual keysym
-func GetKeyName(key Key) string {
+func GetKeyName(key int32) string {
 	name := C.GoString(C.SDL_GetKeyName(C.SDL_Keycode(key)))
 	return name
 }

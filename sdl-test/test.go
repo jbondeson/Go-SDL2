@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/krig/Go-SDL2/mixer"
 	"github.com/krig/Go-SDL2/sdl"
+	"github.com/krig/Go-SDL2/ttf"
 	"log"
 	"math"
 )
@@ -39,10 +40,22 @@ func worm(in <-chan Point, out chan<- Point, draw chan<- Point) {
 	}
 }
 
+func RenderTextToTexture(r *sdl.Renderer, f *ttf.Font, text string, color sdl.Color) (*sdl.Texture, int, int) {
+	textw, texth, err := f.SizeText(text)
+	if err != nil {
+		log.Fatal(err)
+	}
+	txt_surface := f.RenderText_Blended(text, color)
+	txt_tex := r.CreateTextureFromSurface(txt_surface)
+	txt_surface.Free()
+	return txt_tex, textw, texth
+}
+
 func main() {
 	if sdl.Init(sdl.INIT_EVERYTHING) != 0 {
 		log.Fatal(sdl.GetError())
 	}
+	defer sdl.Quit()
 
 	if mixer.OpenAudio(mixer.DEFAULT_FREQUENCY, mixer.DEFAULT_FORMAT,
 		mixer.DEFAULT_CHANNELS, 4096) != 0 {
@@ -55,15 +68,23 @@ func main() {
 		log.Println("nil window")
 		log.Fatal(sdl.GetError())
 	}
+	defer window.Destroy()
 
 	if rend == nil {
 		log.Println("nil rend")
 		log.Fatal(sdl.GetError())
 	}
+	defer rend.Destroy()
+
+	if ttf.Init() != 0 {
+		log.Fatal(sdl.GetError())
+	}
+	defer ttf.Quit()
 
 	window.SetTitle("First SDL2 Window")
 
 	image := sdl.Load("./test.png")
+	defer image.Free()
 
 	if image == nil {
 		log.Println("nil image")
@@ -72,7 +93,13 @@ func main() {
 
 	window.SetIcon(image)
 
-	tex := sdl.CreateTextureFromSurface(rend, image)
+	tex := rend.CreateTextureFromSurface(image)
+	defer tex.Destroy()
+
+	font := ttf.OpenFont("./Fontin Sans.otf", 16)
+	defer font.Close()
+	txt_tex, _, _ := RenderTextToTexture(rend, font, "This is a test", sdl.Color{0x7F, 0xFF, 0x10, 0xFF})
+	defer txt_tex.Destroy()
 
 	running := true
 
@@ -129,21 +156,21 @@ func main() {
 
 			case sdl.KeyboardEvent:
 				println("")
-				println(e.Keysym.Sym, ": ", sdl.GetKeyName(sdl.Key(e.Keysym.Sym)))
+				println(e.Keysym.Keycode, ": ", sdl.GetKeyName(e.Keysym.Keycode))
 
-				if e.Keysym.Sym == sdl.K_ESCAPE {
+				if e.Keysym.Keycode == sdl.K_ESCAPE {
 					running = false
 				}
 
 				fmt.Printf("%04x ", e.Type)
 
-				for i := 0; i < len(e.Pad0); i++ {
-					fmt.Printf("%02x ", e.Pad0[i])
-				}
 				println()
 
-				fmt.Printf("Type: %02x State: %02x Pad: %02x\n", e.Type, e.State, e.Pad0[0])
-				fmt.Printf("Scancode: %02x Sym: %08x Mod: %04x Unicode: %04x\n", e.Keysym.Scancode, e.Keysym.Sym, e.Keysym.Mod, e.Keysym.Unicode)
+				fmt.Printf("Type: %02x State: %02x\n", e.Type, e.State)
+				fmt.Printf("Scancode: %02x Keycode: %02x Mod: %04x\n",
+					e.Keysym.Scancode,
+					e.Keysym.Keycode,
+					e.Keysym.Mod)
 			case sdl.MouseButtonEvent:
 				if e.Type == sdl.MOUSEBUTTONDOWN {
 					println("Click:", e.X, e.Y)
@@ -153,15 +180,12 @@ func main() {
 				}
 			}
 		}
-		rend.SetDrawColor(sdl.Color{0x30, 0x20, 0x19, 0xFF, 0x00})
+		rend.SetDrawColor(sdl.Color{0x30, 0x20, 0x19, 0xFF})
 		rend.FillRect(nil)
 		rend.Copy(tex, nil, nil)
+
+		rend.Copy(txt_tex, nil, nil)
+
 		rend.Present()
 	}
-
-	image.Free()
-	tex.Destroy()
-	rend.Destroy()
-	window.Destroy()
-	sdl.Quit()
 }
