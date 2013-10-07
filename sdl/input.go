@@ -33,6 +33,17 @@ import "unsafe"
 // Keyboard
 // ======
 
+func GetKeyboardFocus() *Window {
+	window := C.SDL_GetKeyboardFocus()
+	return wrapWindow(window)
+}
+
+func GetKeyboardState() (ret []byte) {
+	var numkeys C.int = 0
+	state := C.SDL_GetKeyboardState(&numkeys)
+	return C.GoBytes(unsafe.Pointer(state), numkeys)
+}
+
 // Gets the state of modifier keys
 func GetModState() int32 {
 	state := int32(C.SDL_GetModState())
@@ -44,10 +55,64 @@ func SetModState(modstate int32) {
 	C.SDL_SetModState(C.SDL_Keymod(modstate))
 }
 
+func GetKeyFromScancode(scancode int32) int32 {
+	return int32(C.SDL_GetKeyFromScancode(C.SDL_Scancode(scancode)))
+}
+
+func GetScancodeFromKey(key int32) int32 {
+	return int32(C.SDL_GetScancodeFromKey(C.SDL_Keycode(key)))
+}
+
+func GetScancodeName(scancode int32) string {
+	name := C.GoString(C.SDL_GetScancodeName(C.SDL_Scancode(scancode)))
+	return name
+}
+
+func GetKeyFromName(name string) int32 {
+	cname := C.CString(name)
+	key := C.SDL_GetKeyFromName(cname)
+	C.free(unsafe.Pointer(cname))
+	return int32(key)
+}
+
 // Gets the name of an SDL virtual keysym
 func GetKeyName(key int32) string {
 	name := C.GoString(C.SDL_GetKeyName(C.SDL_Keycode(key)))
 	return name
+}
+
+func GetScancodeFromName(name string) int32 {
+	cname := C.CString(name)
+	scancode := C.SDL_GetScancodeFromName(cname)
+	C.free(unsafe.Pointer(cname))
+	return int32(scancode)
+}
+
+func StartTextInput() {
+	C.SDL_StartTextInput()
+}
+
+func StopTextInput() {
+	C.SDL_StopTextInput()
+}
+
+func IsTextInputActive() bool {
+	active := int32(C.SDL_IsTextInputActive())
+	return active != 0
+}
+
+func SetTextInputRect(rect *Rect) {
+	C.SDL_SetTextInputRect((*C.SDL_Rect)(unsafe.Pointer(rect)))
+}
+
+func HasScreenKeyboardSupport() bool {
+	active := int32(C.SDL_HasScreenKeyboardSupport())
+	return active != 0
+}
+
+func IsScreenKeyboardShown(window *Window) bool {
+	active := int32(C.SDL_IsScreenKeyboardShown(window.cWindow))
+	return active != 0
 }
 
 
@@ -61,16 +126,21 @@ func GetMouseFocus() *Window {
 }
 
 // Retrieves the current state of the mouse.
-func GetMouseState(x, y *int) uint32 {
-	state := uint32(C.SDL_GetMouseState((*C.int)(cast(x)), (*C.int)(cast(y))))
-	return state
+// returns state, x, y
+func GetMouseState() (uint32, int, int) {
+	var x C.int = 0
+	var y C.int = 0
+	state := uint32(C.SDL_GetMouseState(&x, &y))
+	return state, int(x), int(y)
 }
 
 // Retrieves the current state of the mouse relative to the last time this
 // function was called.
-func GetRelativeMouseState(x, y *int) uint32 {
-	state := uint32(C.SDL_GetRelativeMouseState((*C.int)(cast(x)), (*C.int)(cast(y))))
-	return state
+func GetRelativeMouseState() (uint32, int, int) {
+	var x C.int = 0
+	var y C.int = 0
+	state := uint32(C.SDL_GetRelativeMouseState(&x, &y))
+	return state, int(x), int(y)
 }
 
 /**
@@ -84,6 +154,14 @@ func GetRelativeMouseState(x, y *int) uint32 {
  */
 func WarpMouseInWindow(window *Window, x int, y int) {
 	C.SDL_WarpMouseInWindow(window.cWindow, C.int(x), C.int(y))
+}
+
+func SetRelativeMouseMode(enabled bool) bool {
+	return int(C.SDL_SetRelativeMouseMode(C.SDL_bool(bool2int(enabled)))) == 0
+}
+
+func GetRelativeMouseMode() bool {
+	return int(C.SDL_GetRelativeMouseMode()) != 0
 }
 
 
