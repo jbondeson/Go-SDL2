@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/scottferg/Go-SDL/sdl"
-	"math/rand"
-	"time"
+	"github.com/krig/Go-SDL2/sdl"
 )
 
 func loadImage(name string) *sdl.Surface {
@@ -25,31 +23,29 @@ func main() {
 
 	defer sdl.Quit()
 
-	screen := sdl.SetVideoMode(400, 300, 32, 0)
-	if screen == nil {
-		panic(sdl.GetError())
+	window, rend := sdl.CreateWindowAndRenderer(640, 480, sdl.WINDOW_SHOWN |
+		sdl.RENDERER_ACCELERATED |
+		sdl.RENDERER_PRESENTVSYNC)
+
+	if (window == nil) || (rend == nil) {
+		fmt.Printf("%#v\n", sdl.GetError())
 	}
 
-	sdl.WM_SetCaption("Template", "")
+	window.SetTitle("Podcast Studio")
 
-	ticker := time.NewTicker(1e9 / 2 /*2 Hz*/ )
-
-loop:
-	for {
-		select {
-		case <-ticker.C:
-			// Note: For better efficiency, use UpdateRects instead of Flip
-			screen.FillRect(nil, /*color*/ rand.Uint32())
-			//screen.Blit(&sdl.Rect{x,y, 0, 0}, image, nil)
-			screen.Flip()
-
-		case event := <-sdl.Events:
-			fmt.Printf("%#v\n", event)
-
-			switch event.(type) {
-			case sdl.QuitEvent:
-				break loop
+	running := true
+	event := &sdl.Event{}
+	for running {
+		for event.Poll() {
+			switch event.Type {
+			case sdl.QUIT:
+				running = false
 			}
 		}
+		rend.SetDrawColor(sdl.Color{0x30, 0xff, 0x30, 0xFF, 0x00})
+		//rect := &sdl.Rect{0, 0, (uint16)(window.W), (uint16)(window.H)}
+		//rend.FillRect(rect)
+		rend.FillRect(nil)
+		rend.Present()
 	}
 }

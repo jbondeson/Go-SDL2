@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/scottferg/Go-SDL2/mixer"
-	"github.com/scottferg/Go-SDL2/sdl"
+	"github.com/krig/Go-SDL2/mixer"
+	"github.com/krig/Go-SDL2/sdl"
 	"log"
 	"math"
 )
@@ -90,15 +90,11 @@ func main() {
 
 	// ticker := time.NewTicker(time.Second / 50) // 50 Hz
 
-	rend.SetDrawColor(sdl.Color{0x30, 0x20, 0x19, 0xFF, 0x00})
-	rend.FillRect(nil)
-	rend.Copy(tex, nil, nil)
-	rend.Present()
-
 	window.ShowSimpleMessageBox(sdl.MESSAGEBOX_INFORMATION, "Test Message", "SDL2 supports message boxes!")
+	event := &sdl.Event{}
 
 	for running {
-		select {
+//		select {
 		/*
 					case <-ticker.C:
 						rend.SetDrawColor(0x30, 0x20, 0x19, 0xFF)
@@ -126,10 +122,11 @@ func main() {
 
 						rend.Present()
 		*/
-		case _event := <-sdl.Events:
-			switch e := _event.(type) {
+		for event.Poll() {
+			switch e := event.Get().(type) {
 			case sdl.QuitEvent:
 				running = false
+
 			case sdl.KeyboardEvent:
 				println("")
 				println(e.Keysym.Sym, ": ", sdl.GetKeyName(sdl.Key(e.Keysym.Sym)))
@@ -147,7 +144,6 @@ func main() {
 
 				fmt.Printf("Type: %02x State: %02x Pad: %02x\n", e.Type, e.State, e.Pad0[0])
 				fmt.Printf("Scancode: %02x Sym: %08x Mod: %04x Unicode: %04x\n", e.Keysym.Scancode, e.Keysym.Sym, e.Keysym.Mod, e.Keysym.Unicode)
-
 			case sdl.MouseButtonEvent:
 				if e.Type == sdl.MOUSEBUTTONDOWN {
 					println("Click:", e.X, e.Y)
@@ -157,6 +153,10 @@ func main() {
 				}
 			}
 		}
+		rend.SetDrawColor(sdl.Color{0x30, 0x20, 0x19, 0xFF, 0x00})
+		rend.FillRect(nil)
+		rend.Copy(tex, nil, nil)
+		rend.Present()
 	}
 
 	image.Free()

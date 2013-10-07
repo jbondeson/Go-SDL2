@@ -22,7 +22,7 @@ func pollEvents() {
 	event := &Event{}
 
 	for {
-		for event.poll() {
+		for event.Poll() {
 			switch event.Type {
 			case QUIT:
 				events <- *(*QuitEvent)(cast(event))
@@ -55,5 +55,5 @@ func pollEvents() {
 }
 
 func init() {
-	go pollEvents()
+	///go pollEvents()
 }
