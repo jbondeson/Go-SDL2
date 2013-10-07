@@ -68,6 +68,13 @@ func ptr(v interface{}) unsafe.Pointer {
 	return unsafe.Pointer(et.UnsafeAddr())
 }
 
+func bool2int(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
+
 // ======
 // SDL.h
 // =====

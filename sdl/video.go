@@ -127,13 +127,6 @@ func (w *Window) ShowSimpleMessageBox(flags uint32, title, message string) {
 	C.free(unsafe.Pointer(cmessage))
 }
 
-func bool2int(b bool) int {
-	if b {
-		return 1
-	}
-	return 0
-}
-
 func (w *Window) SetGrab(grabbed bool) {
 	C.SDL_SetWindowGrab(w.cWindow, C.SDL_bool(bool2int(grabbed)))
 }

@@ -87,9 +87,6 @@ func Audio_IsUnsigned(x uint32) bool {
 	return !Audio_IsSigned(x)
 }
 
-
-type AudioCallback func(userdata unsafe.Pointer, stream *byte, len int32)
-
 type AudioSpec struct {
 	Freq int32
 	Format uint16
@@ -98,8 +95,7 @@ type AudioSpec struct {
 	Samples uint16
 	Padding uint16
 	Size uint32
-	Callback AudioCallback
-	UserData interface{}
+	Callback func([]byte)
 }
 
 func GetNumAudioDrivers() int {
@@ -125,8 +121,8 @@ func GetNumAudioDevices(iscapture int) int {
 	return int(C.SDL_GetNumAudioDevices(C.int(iscapture)))
 }
 
-func GetAudioDeviceName(index, iscapture int) string {
-	return C.GoString(C.SDL_GetAudioDeviceName(C.int(index), C.int(iscapture)))
+func GetAudioDeviceName(index int, iscapture bool) string {
+	return C.GoString(C.SDL_GetAudioDeviceName(C.int(index), C.int(bool2int(iscapture))))
 }
 
 func GetAudioStatus() int32 {
@@ -137,12 +133,12 @@ func GetAudioDeviceStatus(dev uint32) int32 {
 	return int32(C.SDL_GetAudioDeviceStatus(C.SDL_AudioDeviceID(dev)))
 }
 
-func PauseAudio(pause_on int) {
-	C.SDL_PauseAudio(C.int(pause_on))
+func PauseAudio(pause_on bool) {
+	C.SDL_PauseAudio(C.int(bool2int(pause_on)))
 }
 
-func PauseAudioDevice(dev uint32, pause_on int) {
-	C.SDL_PauseAudioDevice(C.SDL_AudioDeviceID(dev), C.int(pause_on))
+func PauseAudioDevice(dev uint32, pause_on bool) {
+	C.SDL_PauseAudioDevice(C.SDL_AudioDeviceID(dev), C.int(bool2int(pause_on)))
 }
 
 type WAVData struct {
