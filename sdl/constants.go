@@ -1,5 +1,29 @@
 package sdl
 
+/*
+  SDL Go Wrapper
+
+  Simple DirectMedia Layer
+  Copyright (C) 1997-2013 Sam Lantinga <slouken@libsdl.org>
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+*/
+
+
 // #cgo pkg-config: sdl2
 // #include <SDL2/SDL.h>
 import "C"
@@ -7,10 +31,13 @@ import "C"
 const (
 	// init flags
 
+	INIT_TIMER       = C.SDL_INIT_TIMER
 	INIT_AUDIO       = C.SDL_INIT_AUDIO
 	INIT_VIDEO       = C.SDL_INIT_VIDEO
-	INIT_TIMER       = C.SDL_INIT_TIMER
 	INIT_JOYSTICK    = C.SDL_INIT_JOYSTICK
+	INIT_HAPTIC      = C.SDL_INIT_HAPTIC
+	INIT_GAMECONTROLLER = C.SDL_INIT_GAMECONTROLLER
+	INIT_EVENTS      = C.SDL_INIT_EVENTS
 	INIT_NOPARACHUTE = C.SDL_INIT_NOPARACHUTE
 	INIT_EVERYTHING  = C.SDL_INIT_EVERYTHING
 
@@ -19,6 +46,7 @@ const (
 	SWSURFACE = C.SDL_SWSURFACE
 	RLEACCEL  = C.SDL_RLEACCEL
 	PREALLOC  = C.SDL_PREALLOC
+	DONTFREE  = C.SDL_DONTFREE
 
 	// Window flags
 
@@ -65,22 +93,6 @@ const (
 	GL_ACCELERATED_VISUAL = C.SDL_GL_ACCELERATED_VISUAL
 	// GL_SWAP_CONTROL       = C.SDL_GL_SWAP_CONTROL
 
-	// event types
-
-	KEYDOWN         = C.SDL_KEYDOWN
-	KEYUP           = C.SDL_KEYUP
-	MOUSEMOTION     = C.SDL_MOUSEMOTION
-	MOUSEBUTTONDOWN = C.SDL_MOUSEBUTTONDOWN
-	MOUSEBUTTONUP   = C.SDL_MOUSEBUTTONUP
-	JOYAXISMOTION   = C.SDL_JOYAXISMOTION
-	JOYBALLMOTION   = C.SDL_JOYBALLMOTION
-	JOYHATMOTION    = C.SDL_JOYHATMOTION
-	JOYBUTTONDOWN   = C.SDL_JOYBUTTONDOWN
-	JOYBUTTONUP     = C.SDL_JOYBUTTONUP
-	QUIT            = C.SDL_QUIT
-	SYSWMEVENT      = C.SDL_SYSWMEVENT
-	USEREVENT       = C.SDL_USEREVENT
-
 	// window events
 	WINDOWEVENT_SHOWN        = C.SDL_WINDOWEVENT_SHOWN
 	WINDOWEVENT_HIDDEN       = C.SDL_WINDOWEVENT_HIDDEN
@@ -96,12 +108,6 @@ const (
 	WINDOWEVENT_FOCUS_GAINED = C.SDL_WINDOWEVENT_FOCUS_GAINED
 	WINDOWEVENT_FOCUS_LOST   = C.SDL_WINDOWEVENT_FOCUS_LOST
 	WINDOWEVENT_CLOSE        = C.SDL_WINDOWEVENT_CLOSE
-
-	// event state
-
-	QUERY   = C.SDL_QUERY
-	DISABLE = C.SDL_DISABLE
-	ENABLE  = C.SDL_ENABLE
 
 	// keys
 	K_UNKNOWN      = C.SDLK_UNKNOWN
@@ -280,6 +286,15 @@ const (
 	MESSAGEBOX_WARNING     = C.SDL_MESSAGEBOX_WARNING
 	MESSAGEBOX_INFORMATION = C.SDL_MESSAGEBOX_INFORMATION
 
+	MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT = C.SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT
+	MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT = C.SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT
+
+	MESSAGEBOX_COLOR_BACKGROUND = C.SDL_MESSAGEBOX_COLOR_BACKGROUND
+	MESSAGEBOX_COLOR_TEXT = C.SDL_MESSAGEBOX_COLOR_TEXT
+	MESSAGEBOX_COLOR_BUTTON_BORDER = C.SDL_MESSAGEBOX_COLOR_BUTTON_BORDER
+	MESSAGEBOX_COLOR_BUTTON_BACKGROUND = C.SDL_MESSAGEBOX_COLOR_BUTTON_BACKGROUND
+	MESSAGEBOX_COLOR_BUTTON_SELECTED = C.SDL_MESSAGEBOX_COLOR_BUTTON_SELECTED
+
 	// pixel format
 
 	PIXELFORMAT_UNKNOWN     = C.SDL_PIXELFORMAT_UNKNOWN
@@ -326,7 +341,5 @@ const (
 
 	TEXTUREACCESS_STATIC    = C.SDL_TEXTUREACCESS_STATIC
 	TEXTUREACCESS_STREAMING = C.SDL_TEXTUREACCESS_STREAMING
-
-	TEXTEDITINGEVENT_TEXT_SIZE = 32
-	TEXTINPUTEVENT_TEXT_SIZE = 32
+	TEXTUREACCESS_TARGET    = C.SDL_TEXTUREACCESS_TARGET
 )

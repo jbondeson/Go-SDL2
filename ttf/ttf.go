@@ -7,12 +7,12 @@ that work with loaded fonts are changed to have a more object-oriented feel.
 */
 package ttf
 
-// #cgo pkg-config: SDL_ttf
-// #include <SDL_ttf.h>
+// #cgo pkg-config: SDL2_ttf
+// #include <SDL2/SDL_ttf.h>
 import "C"
 
 import (
-	"github.com/krig/Go-SDL/sdl"
+	"github.com/krig/Go-SDL2/sdl"
 	"unsafe"
 )
 
@@ -25,7 +25,7 @@ import (
 //
 // If Go adds some kind of support for package versioning, this function will go away.
 func GoSdlVersion() string {
-	return "⚛SDL TTF bindings 1.0"
+	return "krig SDL TTF bindings 1.0"
 }
 
 func wrap(cSurface *C.SDL_Surface) *sdl.Surface {
@@ -98,9 +98,9 @@ func (f *Font) Close() {
 
 // Renders Latin-1 text in the specified color and returns an SDL surface.  Solid
 // rendering is quick, although not as smooth as the other rendering types.
-func RenderText_Solid(font *Font, text string, color sdl.Color) *sdl.Surface {
+func (font *Font) RenderText_Solid(text string, color sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderText_Solid(font.cfont, ctext, ccol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
@@ -108,9 +108,9 @@ func RenderText_Solid(font *Font, text string, color sdl.Color) *sdl.Surface {
 
 // Renders UTF-8 text in the specified color and returns an SDL surface.  Solid
 // rendering is quick, although not as smooth as the other rendering types.
-func RenderUTF8_Solid(font *Font, text string, color sdl.Color) *sdl.Surface {
+func (font *Font) RenderUTF8_Solid(text string, color sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderUTF8_Solid(font.cfont, ctext, ccol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
@@ -119,10 +119,10 @@ func RenderUTF8_Solid(font *Font, text string, color sdl.Color) *sdl.Surface {
 // Renders Latin-1 text in the specified color (and with the specified background
 // color) and returns an SDL surface.  Shaded rendering is slower than solid
 // rendering and the text is in a solid box, but it's better looking.
-func RenderText_Shaded(font *Font, text string, color, bgcolor sdl.Color) *sdl.Surface {
+func (font *Font) RenderText_Shaded(text string, color, bgcolor sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
-	cbgcol := C.SDL_Color{C.Uint8(bgcolor.R), C.Uint8(bgcolor.G), C.Uint8(bgcolor.B), C.Uint8(bgcolor.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
+	cbgcol := C.SDL_Color{C.Uint8(bgcolor.R), C.Uint8(bgcolor.G), C.Uint8(bgcolor.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderText_Shaded(font.cfont, ctext, ccol, cbgcol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
@@ -131,10 +131,10 @@ func RenderText_Shaded(font *Font, text string, color, bgcolor sdl.Color) *sdl.S
 // Renders UTF-8 text in the specified color (and with the specified background
 // color) and returns an SDL surface.  Shaded rendering is slower than solid
 // rendering and the text is in a solid box, but it's better looking.
-func RenderUTF8_Shaded(font *Font, text string, color, bgcolor sdl.Color) *sdl.Surface {
+func (font *Font) RenderUTF8_Shaded(text string, color, bgcolor sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
-	cbgcol := C.SDL_Color{C.Uint8(bgcolor.R), C.Uint8(bgcolor.G), C.Uint8(bgcolor.B), C.Uint8(bgcolor.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
+	cbgcol := C.SDL_Color{C.Uint8(bgcolor.R), C.Uint8(bgcolor.G), C.Uint8(bgcolor.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderUTF8_Shaded(font.cfont, ctext, ccol, cbgcol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
@@ -143,9 +143,9 @@ func RenderUTF8_Shaded(font *Font, text string, color, bgcolor sdl.Color) *sdl.S
 // Renders Latin-1 text in the specified color and returns an SDL surface.
 // Blended rendering is the slowest of the three methods, although it produces
 // the best results, especially when blitted over another image.
-func RenderText_Blended(font *Font, text string, color sdl.Color) *sdl.Surface {
+func (font *Font) RenderText_Blended(text string, color sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderText_Blended(font.cfont, ctext, ccol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
@@ -154,12 +154,22 @@ func RenderText_Blended(font *Font, text string, color sdl.Color) *sdl.Surface {
 // Renders UTF-8 text in the specified color and returns an SDL surface.
 // Blended rendering is the slowest of the three methods, although it produces
 // the best results, especially when blitted over another image.
-func RenderUTF8_Blended(font *Font, text string, color sdl.Color) *sdl.Surface {
+func (font *Font) RenderUTF8_Blended(text string, color sdl.Color) *sdl.Surface {
 	ctext := C.CString(text)
-	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.Unused)}
+	ccol := C.SDL_Color{C.Uint8(color.R), C.Uint8(color.G), C.Uint8(color.B), C.Uint8(color.A)}
 	surface := C.TTF_RenderUTF8_Blended(font.cfont, ctext, ccol)
 	C.free(unsafe.Pointer(ctext))
 	return wrap(surface)
+}
+
+// Set and retrieve FreeType hinter settings
+func (f *Font) GetHinting() int {
+	result := int(C.TTF_GetFontHinting(f.cfont))
+	return result
+}
+
+func (f *Font) SetHinting(hinting int) {
+	C.TTF_SetFontHinting(f.cfont, C.int(hinting))
 }
 
 // Returns the rendering style of the font.
@@ -172,6 +182,7 @@ func (f *Font) GetStyle() int {
 func (f *Font) SetStyle(style int) {
 	C.TTF_SetFontStyle(f.cfont, C.int(style))
 }
+
 
 // Returns the maximum height of all the glyphs of the font.
 func (f *Font) Height() int {
@@ -253,39 +264,45 @@ func (f *Font) StyleName() string {
 // Return values are:
 //   minx, maxx, miny, maxy, advance, err
 //
-// The last return value (err) is 0 for success, -1 for any error (for example
-// if the glyph is not available in this font).
-//
 // For more information on glyph metrics, visit
 // http://freetype.sourceforge.net/freetype2/docs/tutorial/step2.html
-func (f *Font) GlyphMetrics(ch uint16) (int, int, int, int, int, int) {
+func (f *Font) GlyphMetrics(ch uint16) (int, int, int, int, int, error) {
 	minx := C.int(0)
 	maxx := C.int(0)
 	miny := C.int(0)
 	maxy := C.int(0)
 	advance := C.int(0)
 	err := C.TTF_GlyphMetrics(f.cfont, C.Uint16(ch), &minx, &maxx, &miny, &maxy, &advance)
-	return int(minx), int(maxx), int(miny), int(maxy), int(advance), int(err)
+	if int(err) != 0 {
+		return int(minx), int(maxx), int(miny), int(maxy), int(advance), sdl.NewSDLError()
+	}
+	return int(minx), int(maxx), int(miny), int(maxy), int(advance), nil
 }
 
 // Return the width and height of the rendered Latin-1 text.
 //
-// Return values are (width, height, err) where err is 0 for success, -1 on any error.
-func (f *Font) SizeText(text string) (int, int, int) {
+// Return values are (width, height, err)
+func (f *Font) SizeText(text string) (int, int, error) {
 	w := C.int(0)
 	h := C.int(0)
 	s := C.CString(text)
 	err := C.TTF_SizeText(f.cfont, s, &w, &h)
-	return int(w), int(h), int(err)
+	if int(err) != 0 {
+		return int(w), int(h), sdl.NewSDLError()
+	}
+	return int(w), int(h), nil
 }
 
 // Return the width and height of the rendered UTF-8 text.
 //
-// Return values are (width, height, err) where err is 0 for success, -1 on any error.
-func (f *Font) SizeUTF8(text string) (int, int, int) {
+// Return values are (width, height, err)
+func (f *Font) SizeUTF8(text string) (int, int, error) {
 	w := C.int(0)
 	h := C.int(0)
 	s := C.CString(text)
 	err := C.TTF_SizeUTF8(f.cfont, s, &w, &h)
-	return int(w), int(h), int(err)
+	if int(err) != 0 {
+		return int(w), int(h), sdl.NewSDLError()
+	}
+	return int(w), int(h), nil
 }

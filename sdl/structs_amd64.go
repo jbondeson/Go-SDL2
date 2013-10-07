@@ -38,7 +38,7 @@ type Color struct {
 	R      uint8
 	G      uint8
 	B      uint8
-	Alpha  uint8
+	A      uint8
 }
 
 type Palette struct {
@@ -137,12 +137,10 @@ type MouseWheelEvent struct {
 	Y          int32
 }
 
-type JoystickID int32
-
 type JoyAxisEvent struct {
 	Type       uint32
 	Timestamp  uint32
-	Which      JoystickID
+	Which      int32
 	Axis       uint8
 	Padding1   uint8
 	Padding2   uint8
@@ -154,7 +152,7 @@ type JoyAxisEvent struct {
 type JoyBallEvent struct {
 	Type       uint32
 	Timestamp  uint32
-	Which      JoystickID
+	Which      int32
 	Ball       uint8
 	Padding1   uint8
 	Padding2   uint8
@@ -166,7 +164,7 @@ type JoyBallEvent struct {
 type JoyHatEvent struct {
 	Type       uint32
 	Timestamp  uint32
-	Which      JoystickID
+	Which      int32
 	Hat        uint8
 	Value      uint8
 	Padding1   uint8
@@ -176,7 +174,7 @@ type JoyHatEvent struct {
 type JoyButtonEvent struct {
 	Type       uint32
 	Timestamp  uint32
-	Which      JoystickID
+	Which      int32
 	Button     uint8
 	State      uint8
 	Padding1   uint8
@@ -186,7 +184,7 @@ type JoyButtonEvent struct {
 type JoyDeviceEvent struct {
 	Type       uint32
 	Timestamp  uint32
-	Which      JoystickID
+	Which      int32
 }
 
 /**
@@ -196,7 +194,7 @@ type ControllerAxisEvent struct
 {
 	Type uint32        /**< ::CONTROLLERAXISMOTION */
 	Timestamp uint32
-	Which JoystickID /**< The joystick instance id */
+	Which int32 /**< The joystick instance id */
 	Axis uint8         /**< The controller axis (GameControllerAxis) */
 	Padding1 uint8
 	Padding2 uint8
@@ -213,7 +211,7 @@ type ControllerButtonEvent struct
 {
 	Type uint32        /**< ::CONTROLLERBUTTONDOWN or ::CONTROLLERBUTTONUP */
 	Timestamp uint32
-	Which JoystickID /**< The joystick instance id */
+	Which int32 /**< The joystick instance id */
 	Button uint8       /**< The controller button (GameControllerButton) */
 	State uint8        /**< ::PRESSED or ::RELEASED */
 	Padding1 uint8
@@ -231,10 +229,6 @@ type ControllerDeviceEvent struct
 	Which int32       /**< The joystick device index for the ADDED event, instance id for the REMOVED or REMAPPED event */
 }
 
-type TouchID int32
-type FingerID int32
-type GestureID int32
-
 /**
  *  \brief Touch finger event structure (event.tfinger.*)
  */
@@ -242,8 +236,8 @@ type TouchFingerEvent struct
 {
 	Type uint32        /**< ::FINGERMOTION or ::FINGERDOWN or ::FINGERUP */
 	Timestamp uint32
-	TouchId TouchID /**< The touch device id */
-	FingerId FingerID
+	TouchId int32 /**< The touch device id */
+	FingerId int32
 	X float32            /**< Normalized in the range 0...1 */
 	Y float32            /**< Normalized in the range 0...1 */
 	Dx float32           /**< Normalized in the range 0...1 */
@@ -259,7 +253,7 @@ type MultiGestureEvent struct
 {
 	Type uint32        /**< ::MULTIGESTURE */
 	Timestamp uint32
-	TouchId TouchID /**< The touch device index */
+	TouchId int32 /**< The touch device index */
 	Dtheta float32
 	Ddist float32
 	X float32
@@ -275,8 +269,8 @@ type DollarGestureEvent struct
 {
 	Type uint32        /**< ::DOLLARGESTURE */
 	Timestamp uint32
-	TouchId TouchID /**< The touch device id */
-	GestureId GestureID
+	TouchId int32 /**< The touch device id */
+	GestureId int32
 	NumFingers uint32
 	Error float32
 	X float32            /**< Normalized center of gesture */
