@@ -214,3 +214,58 @@ func (t *Texture) Bind() (float32, float32, bool) {
 func (t *Texture) Unbind() bool {
 	return int(C.SDL_GL_UnbindTexture(t.cTexture)) == 0
 }
+
+// Query returns (w, h)
+func (t *Texture) GetSize() (int, int) {
+	var w C.int
+	var h C.int
+	C.SDL_QueryTexture(t.cTexture, nil, nil, &w, &h)
+	return int(w), int(h)
+}
+
+func (r *Rect) Empty() bool {
+	return (r.W <= 0) || (r.H <= 0)
+}
+
+func (a *Rect) Equals(b *Rect) bool {
+	return (a.X == b.X) && (a.Y == b.Y) && (a.W == b.W) && (a.H == b.H)
+}
+
+func (a *Rect) HasIntersection(b *Rect) bool {
+	return C.SDL_HasIntersection((*C.SDL_Rect)(unsafe.Pointer(a)), (*C.SDL_Rect)(unsafe.Pointer(b))) == C.SDL_TRUE
+}
+
+func (r *Rect) Contains(x, y int32) bool {
+	return !(x < r.X || x > (r.X + r.W) || y < r.Y || y > (r.Y + r.H))
+}
+
+func (a *Rect) Intersect(b *Rect) *Rect {
+	var ret Rect
+	is := C.SDL_IntersectRect((*C.SDL_Rect)(unsafe.Pointer(a)), (*C.SDL_Rect)(unsafe.Pointer(b)), (*C.SDL_Rect)(unsafe.Pointer(&ret)))
+	if is == C.SDL_TRUE {
+		return &ret
+	}
+	return nil
+}
+
+func (a *Rect) Union(b *Rect) *Rect {
+	var ret Rect
+	C.SDL_UnionRect((*C.SDL_Rect)(unsafe.Pointer(a)), (*C.SDL_Rect)(unsafe.Pointer(b)), (*C.SDL_Rect)(unsafe.Pointer(&ret)))
+	return &ret
+}
+
+func (clip *Rect) Enclose(points []Point) *Rect {
+	var ret Rect
+	is := C.SDL_EnclosePoints((*C.SDL_Point)(unsafe.Pointer(&points[0])), C.int(len(points)), (*C.SDL_Rect)(unsafe.Pointer(clip)), (*C.SDL_Rect)(unsafe.Pointer(&ret)))
+	if is == C.SDL_TRUE {
+		return &ret
+	}
+	return nil
+}
+
+// Calculate the intersection of a rectangle and line segment.
+// Return SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
+func (r *Rect) IntersectLine(x1, y1, x2, y2 *int32) bool  {
+	ret := C.SDL_IntersectRectAndLine((*C.SDL_Rect)(unsafe.Pointer(r)), (*C.int)(unsafe.Pointer(x1)), (*C.int)(unsafe.Pointer(y1)), (*C.int)(unsafe.Pointer(x2)), (*C.int)(unsafe.Pointer(y2)))
+	return ret == C.SDL_TRUE
+}
