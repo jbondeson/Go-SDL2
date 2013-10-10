@@ -112,7 +112,7 @@ func (r *Renderer) DrawPoints(points []Point) bool {
 	return int(ret) == 0
 }
 
-func (r *Renderer) DrawLine(x1, y1, x2, y2 int) bool {
+func (r *Renderer) DrawLine(x1, y1, x2, y2 int32) bool {
 	ret := C.SDL_RenderDrawLine(r.cRenderer, C.int(x1), C.int(y1), C.int(x2), C.int(y2))
 	return int(ret) == 0
 }
