@@ -37,6 +37,10 @@ func (manager *FPSmanager) GetFramerate() uint32 {
 	return manager.rate
 }
 
+func (manager *FPSmanager) Delta() float64 {
+	return manager.rateticks / 1000.0
+}
+
 func (manager *FPSmanager) FramerateDelay() {
 	var current_ticks, target_ticks, the_delay uint64
 
@@ -52,6 +56,6 @@ func (manager *FPSmanager) FramerateDelay() {
 		time.Sleep(time.Duration(the_delay * 1e6))
 	} else {
 		manager.framecount = 0
-		manager.lastticks = uint64(time.Now().UnixNano()) / 1e6
+		manager.lastticks = current_ticks
 	}
 }
