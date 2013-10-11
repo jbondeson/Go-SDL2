@@ -203,6 +203,22 @@ func (t *Texture) Destroy() {
 	C.SDL_DestroyTexture(t.cTexture)
 }
 
+func (t *Texture) SetBlendMode(blendmode int) bool {
+	ret := C.SDL_SetTextureBlendMode(t.cTexture, C.SDL_BlendMode(blendmode))
+	return int(ret) == 0
+}
+
+func (t *Texture) SetColorMod(r, g, b uint8) bool {
+	ret := C.SDL_SetTextureColorMod(t.cTexture, C.Uint8(r), C.Uint8(g), C.Uint8(b))
+	return int(ret) == 0
+}
+
+func (t *Texture) SetAlphaMod(alpha uint8) bool {
+	ret := C.SDL_SetTextureAlphaMod(t.cTexture, C.Uint8(alpha))
+	return int(ret) == 0
+}
+
+
 // Returns (ok, texture width, texture height)
 func (t *Texture) Bind() (float32, float32, bool) {
 	texw := C.float(0.0)
