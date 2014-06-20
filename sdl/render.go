@@ -23,7 +23,6 @@ package sdl
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 // #cgo pkg-config: sdl2
 // #include <SDL2/SDL.h>
 import "C"
@@ -94,6 +93,11 @@ func (r *Renderer) GetDrawColor() Color {
 func (r *Renderer) SetDrawColor(c Color) {
 	C.SDL_SetRenderDrawColor(r.cRenderer, C.Uint8(c.R),
 		C.Uint8(c.G), C.Uint8(c.B), C.Uint8(c.A))
+}
+
+func (r *Renderer) SetLogicalSize(w, h int) int {
+	ret := C.SDL_RenderSetLogicalSize(r.cRenderer, C.int(w), C.int(h))
+	return int(ret)
 }
 
 func (r *Renderer) Destroy() {
@@ -172,7 +176,6 @@ func (r *Renderer) CopyEx(t *Texture, src, dst *Rect, angle float64, center *Poi
 	return int(ret) == 0
 }
 
-
 func CreateWindowAndRenderer(h, w int, flags uint32) (*Window, *Renderer) {
 	var win Window
 	var rend Renderer
@@ -218,7 +221,6 @@ func (t *Texture) SetAlphaMod(alpha uint8) bool {
 	return int(ret) == 0
 }
 
-
 // Returns (ok, texture width, texture height)
 func (t *Texture) Bind() (float32, float32, bool) {
 	texw := C.float(0.0)
@@ -252,7 +254,7 @@ func (a *Rect) HasIntersection(b *Rect) bool {
 }
 
 func (r *Rect) Contains(x, y int32) bool {
-	return !(x < r.X || x > (r.X + r.W) || y < r.Y || y > (r.Y + r.H))
+	return !(x < r.X || x > (r.X+r.W) || y < r.Y || y > (r.Y+r.H))
 }
 
 func (a *Rect) Intersect(b *Rect) *Rect {
@@ -281,7 +283,7 @@ func (clip *Rect) Enclose(points []Point) *Rect {
 
 // Calculate the intersection of a rectangle and line segment.
 // Return SDL_TRUE if there is an intersection, SDL_FALSE otherwise.
-func (r *Rect) IntersectLine(x1, y1, x2, y2 *int32) bool  {
+func (r *Rect) IntersectLine(x1, y1, x2, y2 *int32) bool {
 	ret := C.SDL_IntersectRectAndLine((*C.SDL_Rect)(unsafe.Pointer(r)), (*C.int)(unsafe.Pointer(x1)), (*C.int)(unsafe.Pointer(y1)), (*C.int)(unsafe.Pointer(x2)), (*C.int)(unsafe.Pointer(y2)))
 	return ret == C.SDL_TRUE
 }
