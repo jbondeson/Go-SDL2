@@ -46,33 +46,33 @@ type AudioDeviceID uint32
 type AudioFormat uint16
 
 const (
-	AUDIO_MASK_BITSIZE = C.SDL_AUDIO_MASK_BITSIZE
+	AUDIO_MASK_BITSIZE  = C.SDL_AUDIO_MASK_BITSIZE
 	AUDIO_MASK_DATATYPE = C.SDL_AUDIO_MASK_DATATYPE
-	AUDIO_MASK_ENDIAN = C.SDL_AUDIO_MASK_ENDIAN
-	AUDIO_MASK_SIGNED = C.SDL_AUDIO_MASK_SIGNED
-	AUDIO_U8 = AudioFormat(C.AUDIO_U8)
-	AUDIO_S8 = AudioFormat(C.AUDIO_S8)
-	AUDIO_U16LSB = AudioFormat(C.AUDIO_U16LSB)
-	AUDIO_S16LSB = AudioFormat(C.AUDIO_S16LSB)
-	AUDIO_U16MSB = AudioFormat(C.AUDIO_U16MSB)
-	AUDIO_S16MSB = AudioFormat(C.AUDIO_S16MSB)
-	AUDIO_U16 = AudioFormat(C.AUDIO_U16)
-	AUDIO_S16 = AudioFormat(C.AUDIO_S16)
-	AUDIO_S32LSB = AudioFormat(C.AUDIO_S32LSB)
-	AUDIO_S32MSB = AudioFormat(C.AUDIO_S32MSB)
-	AUDIO_S32 = AudioFormat(C.AUDIO_S32)
-	AUDIO_F32LSB = AudioFormat(C.AUDIO_F32LSB)
-	AUDIO_F32MSB = AudioFormat(C.AUDIO_F32MSB)
-	AUDIO_F32 = AudioFormat(C.AUDIO_F32)
-	AUDIO_U16SYS = AudioFormat(C.AUDIO_U16SYS)
-	AUDIO_S16SYS = AudioFormat(C.AUDIO_S16SYS)
-	AUDIO_S32SYS = AudioFormat(C.AUDIO_S32SYS)
-	AUDIO_F32SYS = AudioFormat(C.AUDIO_F32SYS)
+	AUDIO_MASK_ENDIAN   = C.SDL_AUDIO_MASK_ENDIAN
+	AUDIO_MASK_SIGNED   = C.SDL_AUDIO_MASK_SIGNED
+	AUDIO_U8            = AudioFormat(C.AUDIO_U8)
+	AUDIO_S8            = AudioFormat(C.AUDIO_S8)
+	AUDIO_U16LSB        = AudioFormat(C.AUDIO_U16LSB)
+	AUDIO_S16LSB        = AudioFormat(C.AUDIO_S16LSB)
+	AUDIO_U16MSB        = AudioFormat(C.AUDIO_U16MSB)
+	AUDIO_S16MSB        = AudioFormat(C.AUDIO_S16MSB)
+	AUDIO_U16           = AudioFormat(C.AUDIO_U16)
+	AUDIO_S16           = AudioFormat(C.AUDIO_S16)
+	AUDIO_S32LSB        = AudioFormat(C.AUDIO_S32LSB)
+	AUDIO_S32MSB        = AudioFormat(C.AUDIO_S32MSB)
+	AUDIO_S32           = AudioFormat(C.AUDIO_S32)
+	AUDIO_F32LSB        = AudioFormat(C.AUDIO_F32LSB)
+	AUDIO_F32MSB        = AudioFormat(C.AUDIO_F32MSB)
+	AUDIO_F32           = AudioFormat(C.AUDIO_F32)
+	AUDIO_U16SYS        = AudioFormat(C.AUDIO_U16SYS)
+	AUDIO_S16SYS        = AudioFormat(C.AUDIO_S16SYS)
+	AUDIO_S32SYS        = AudioFormat(C.AUDIO_S32SYS)
+	AUDIO_F32SYS        = AudioFormat(C.AUDIO_F32SYS)
 
 	AUDIO_ALLOW_FREQUENCY_CHANGE = C.SDL_AUDIO_ALLOW_FREQUENCY_CHANGE
-	AUDIO_ALLOW_FORMAT_CHANGE = C.SDL_AUDIO_ALLOW_FORMAT_CHANGE
-	AUDIO_ALLOW_CHANNELS_CHANGE = C.SDL_AUDIO_ALLOW_CHANNELS_CHANGE
-	AUDIO_ALLOW_ANY_CHANGE = C.SDL_AUDIO_ALLOW_ANY_CHANGE
+	AUDIO_ALLOW_FORMAT_CHANGE    = C.SDL_AUDIO_ALLOW_FORMAT_CHANGE
+	AUDIO_ALLOW_CHANNELS_CHANGE  = C.SDL_AUDIO_ALLOW_CHANNELS_CHANGE
+	AUDIO_ALLOW_ANY_CHANGE       = C.SDL_AUDIO_ALLOW_ANY_CHANGE
 
 	MIX_MAXVOLUME = 128
 )
@@ -106,13 +106,13 @@ func Audio_IsUnsigned(x uint32) bool {
 }
 
 type AudioSpec struct {
-	Freq int32
-	Format AudioFormat
+	Freq     int32
+	Format   AudioFormat
 	Channels uint8
-	Silence uint8
-	Samples uint16
-	Padding uint16
-	Size uint32
+	Silence  uint8
+	Samples  uint16
+	Padding  uint16
+	Size     uint32
 }
 
 func AudioInit(driver string) bool {
@@ -209,7 +209,7 @@ func PauseAudioDevice(dev AudioDeviceID, pause_on bool) {
 }
 
 type WAVData struct {
-	Spec *AudioSpec
+	Spec     *AudioSpec
 	AudioBuf *byte
 	AudioLen uint32
 }
@@ -231,7 +231,7 @@ type AudioFilter func(*AudioCVT, AudioFormat)
 
 type AudioCVT struct {
 	cAudioCVT *C.SDL_AudioCVT
-	Buf []byte
+	Buf       []byte
 }
 
 // returns (cvt, 0/1/-1) -- 0 means no conversion, 1 means filter is set up

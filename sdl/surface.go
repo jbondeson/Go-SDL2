@@ -23,7 +23,6 @@ package sdl
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 // #cgo pkg-config: sdl2
 // #include <SDL2/SDL.h>
 // #include <SDL2/SDL_image.h>
@@ -34,12 +33,12 @@ import "reflect"
 type Surface struct {
 	cSurface *C.SDL_Surface
 
-	Flags  uint32
-	Format *PixelFormat
-	W      int32
-	H      int32
-	Pitch  int32
-	Pixels unsafe.Pointer
+	Flags    uint32
+	Format   *PixelFormat
+	W        int32
+	H        int32
+	Pitch    int32
+	Pixels   unsafe.Pointer
 	ClipRect Rect
 
 	gcPixels interface{} // Prevents garbage collection of pixels passed to func CreateRGBSurfaceFrom

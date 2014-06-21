@@ -23,7 +23,6 @@ package sdl
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 // #cgo pkg-config: sdl2
 // #include <SDL2/SDL.h>
 import "C"
@@ -165,5 +164,3 @@ func MapRGBA(format *PixelFormat, r, g, b, a uint8) uint32 {
 func GetRGBA(color uint32, format *PixelFormat, r, g, b, a *uint8) {
 	C.SDL_GetRGBA(C.Uint32(color), (*C.SDL_PixelFormat)(cast(format)), (*C.Uint8)(r), (*C.Uint8)(g), (*C.Uint8)(b), (*C.Uint8)(a))
 }
-
-

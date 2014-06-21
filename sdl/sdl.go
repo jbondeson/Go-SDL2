@@ -26,7 +26,6 @@ package sdl
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 // #cgo pkg-config: sdl2 SDL2_image
 //
 // struct private_hwdata{};
@@ -38,8 +37,8 @@ import "C"
 
 import (
 	"os"
-	"runtime"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 

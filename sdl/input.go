@@ -23,7 +23,6 @@ package sdl
   3. This notice may not be removed or altered from any source distribution.
 */
 
-
 // #cgo pkg-config: sdl2
 // #include <SDL2/SDL.h>
 import "C"
@@ -115,7 +114,6 @@ func IsScreenKeyboardShown(window *Window) bool {
 	return active != 0
 }
 
-
 // =====
 // Mouse
 // =====
@@ -163,7 +161,6 @@ func SetRelativeMouseMode(enabled bool) bool {
 func GetRelativeMouseMode() bool {
 	return int(C.SDL_GetRelativeMouseMode()) != 0
 }
-
 
 // Toggle whether or not the cursor is shown on the screen.
 func ShowCursor(toggle int) int {
